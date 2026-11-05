@@ -1,0 +1,23 @@
+.doctor-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.doctor-count { text-align: center; margin: 8px 0 22px; }
+.doctor-count p { color: var(--muted); margin: 0; }
+
+.doctor-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+.doctor-avatar { width: 76px; height: 76px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-dark); display: grid; place-items: center; font-weight: 800; font-size: 24px; }
+.doctor-info h3 { font-size: 18px; margin-bottom: 4px; }
+.doctor-info p { margin: 0; }
+.doctor-speciality { color: var(--brand); font-weight: 600; }
+.doctor-meta { color: var(--muted); font-size: 14px; }
+.doctor-rating { color: var(--warn); letter-spacing: 2px; }
+.doctor-rating span { color: var(--line); }
+
+.doctor-book { width: 100%; flex-direction: column; gap: 0; margin-top: auto; }
+.doctor-book small { font-weight: 400; font-size: 12px; opacity: .85; }
+.doctor-booked { width: 100%; margin-top: auto; }
+.doctor-booked-item { background: var(--bg); border-radius: 10px; padding: 10px; font-size: 14px; }
+.doctor-booked-item p { margin: 0 0 4px; }
+.doctor-booked-item .btn { width: 100%; margin-top: 6px; }
+
+.modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(15, 23, 42, .45); display: grid; place-items: center; padding: 16px; }
+.modal { background: #fff; border-radius: var(--radius); padding: 28px; width: 100%; max-width: 440px; text-align: left; max-height: 90vh; overflow-y: auto; }
+.modal h2 { text-align: center; }

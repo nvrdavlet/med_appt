@@ -1,0 +1,12 @@
+.reviews h1 { font-size: 30px; }
+.table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.reviews-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+.reviews-table th, .reviews-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+.reviews-table th { background: var(--brand-soft); color: var(--brand-dark); font-size: 14px; }
+.reviews-table tr:last-child td { border-bottom: 0; }
+.reviews-table .btn { padding: 8px 14px; font-size: 14px; }
+.review-stars { color: var(--warn); }
+
+.rating-selector { display: flex; gap: 6px; }
+.rating-selector button { background: none; border: 0; font-size: 30px; line-height: 1; cursor: pointer; color: var(--line); padding: 0; }
+.rating-selector button.on { color: var(--warn); }

@@ -1,0 +1,8 @@
+.finddoctor { text-align: center; margin-bottom: 28px; }
+.finddoctor h1 { font-size: 30px; color: var(--brand-dark); }
+.finddoctor-icon { margin: 8px 0 18px; }
+.finddoctor-search { position: relative; max-width: 560px; margin: 0 auto; text-align: left; }
+.finddoctor-results { position: absolute; z-index: 10; left: 0; right: 0; top: calc(100% + 6px); background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); list-style: none; margin: 0; padding: 6px; max-height: 300px; overflow-y: auto; }
+.finddoctor-results li { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+.finddoctor-results li:hover { background: var(--bg); }
+.finddoctor-results small { color: var(--muted); font-size: 11px; letter-spacing: .06em; }

@@ -1,0 +1,6 @@
+.notification { position: fixed; right: 20px; bottom: 20px; z-index: 60; width: 320px; max-width: calc(100vw - 32px); background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--brand); border-radius: var(--radius); box-shadow: 0 12px 40px rgba(15, 23, 42, .18); padding: 18px 20px; animation: slide-in .3s ease-out; }
+.notification-head { display: flex; justify-content: space-between; align-items: center; }
+.notification-head h3 { color: var(--brand-dark); margin: 0 0 8px; font-size: 18px; }
+.notification-head button { background: none; border: 0; font-size: 22px; line-height: 1; cursor: pointer; color: var(--muted); }
+.notification p { margin: 0 0 4px; font-size: 14px; }
+@keyframes slide-in { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
