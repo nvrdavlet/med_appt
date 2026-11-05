@@ -1,6 +1,6 @@
-# StayHealthy
+# med_appt – StayHealthy Medical Appointment Booking
 
-StayHealthy is an online medical appointment booking platform built with **React** as the IBM Front-End Developer Capstone project. Patients can find doctors by speciality, book in-person appointments or instant online consultations, get notified about their bookings, review doctors and manage their profile.
+**Project name:** `med_appt` (StayHealthy). StayHealthy is an online medical appointment booking platform built with **React** as the IBM Front-End Developer Capstone project. Patients can find doctors by speciality, book in-person appointments or instant online consultations, get notified about their bookings, review doctors and manage their profile.
 
 ## Features
 
@@ -21,10 +21,13 @@ React 18 · React Router 6 · Vite · HTML5 · CSS3 · Git/GitHub
 ## Getting started
 
 ```bash
+git clone https://github.com/nvrdavlet/med_appt.git
+cd med_appt
 npm install
-npm run dev        # http://localhost:3000
-npm run build      # production build in /dist
-npm run preview    # serve the production build
+npm run dev               # http://localhost:3000
+node server/index.js      # backend API on http://localhost:8181
+npm run build             # production build in server/build
+npm run preview           # serve the production build
 ```
 
 ## Backend API

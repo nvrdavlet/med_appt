@@ -1,16 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const storageKey = (doctorId) => `reviewData_${doctorId}`;
+
+function loadReviewData(doctorId) {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey(doctorId)));
+  } catch {
+    return null;
+  }
+}
 
 // Review form: Name, Review text and a 1–5 star rating selector.
-// After submission the form and the Submit button are disabled so the same
-// doctor cannot be reviewed twice; ReviewForm also disables its "Click Here" button.
-export default function GiveReviews({ doctor, existingReview = null, onSubmit, onCancel }) {
+// reviewData holds the submitted review. It is saved to localStorage, and while
+// it exists the form and the Submit button are disabled (post-submission disabling).
+export default function GiveReviews({ doctor, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
-    name: existingReview?.name || sessionStorage.getItem('name') || '',
-    review: existingReview?.review || '',
-    rating: existingReview?.rating || 0,
+    name: sessionStorage.getItem('name') || '',
+    review: '',
+    rating: 0,
   });
-  const [submitted, setSubmitted] = useState(Boolean(existingReview));
+  const [reviewData, setReviewData] = useState(() => loadReviewData(doctor.id));
   const [showWarning, setShowWarning] = useState(false);
+
+  // Save reviewData whenever it changes so the disabled state survives a reload
+  useEffect(() => {
+    if (reviewData) localStorage.setItem(storageKey(doctor.id), JSON.stringify(reviewData));
+  }, [doctor.id, reviewData]);
+
+  const isSubmitted = Boolean(reviewData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,14 +36,16 @@ export default function GiveReviews({ doctor, existingReview = null, onSubmit, o
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (submitted) return;
+    if (isSubmitted) return;
     if (!formData.name.trim() || !formData.review.trim() || formData.rating === 0) {
       setShowWarning(true);
       return;
     }
-    setSubmitted(true); // disable the form after a successful submit
-    onSubmit(formData);
+    setReviewData(formData); // saved + form becomes disabled
+    if (onSubmit) onSubmit(formData);
   };
+
+  const shown = reviewData || formData;
 
   return (
     <form onSubmit={handleSubmit} noValidate>
@@ -34,16 +53,16 @@ export default function GiveReviews({ doctor, existingReview = null, onSubmit, o
       <p className="subtitle" style={{ textAlign: 'center', color: 'var(--muted)' }}>for {doctor.name}</p>
 
       {showWarning && <p className="error-text">Please fill out all fields and select a rating.</p>}
-      {submitted && <p className="review-submitted">Thank you! Your review has been submitted.</p>}
+      {isSubmitted && <p className="review-submitted">Thank you! Your review has been submitted.</p>}
 
-      <fieldset disabled={submitted} style={{ border: 0, padding: 0, margin: 0 }}>
+      <fieldset disabled={isSubmitted} style={{ border: 0, padding: 0, margin: 0 }}>
         <div className="form-group">
           <label htmlFor="review-name">Name</label>
-          <input id="review-name" name="name" className="form-control" value={formData.name} onChange={handleChange} />
+          <input id="review-name" name="name" className="form-control" value={shown.name} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="review-text">Review</label>
-          <textarea id="review-text" name="review" rows="4" className="form-control" value={formData.review} onChange={handleChange} />
+          <textarea id="review-text" name="review" rows="4" className="form-control" value={shown.review} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label>Rating</label>
@@ -51,7 +70,7 @@ export default function GiveReviews({ doctor, existingReview = null, onSubmit, o
             {[1, 2, 3, 4, 5].map((n) => (
               <button
                 type="button" key={n} aria-label={`${n} stars`}
-                className={n <= formData.rating ? 'on' : ''}
+                className={n <= shown.rating ? 'on' : ''}
                 onClick={() => { setFormData({ ...formData, rating: n }); setShowWarning(false); }}
               >★</button>
             ))}
@@ -60,10 +79,10 @@ export default function GiveReviews({ doctor, existingReview = null, onSubmit, o
       </fieldset>
 
       <div className="form-actions">
-        <button type="submit" className="btn btn-primary" disabled={submitted}>
-          {submitted ? 'Submitted' : 'Submit'}
+        <button type="submit" className="btn btn-primary" disabled={isSubmitted}>
+          {isSubmitted ? 'Submitted' : 'Submit'}
         </button>
-        <button type="button" className="btn btn-ghost" onClick={onCancel}>{submitted ? 'Close' : 'Cancel'}</button>
+        <button type="button" className="btn btn-ghost" onClick={onCancel}>{isSubmitted ? 'Close' : 'Cancel'}</button>
       </div>
     </form>
   );

@@ -58,7 +58,7 @@ export default function ReviewForm() {
       {activeDoctor && (
         <div className="modal-backdrop" onClick={() => setActiveDoctor(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <GiveReviews doctor={activeDoctor} existingReview={reviews[activeDoctor.id]} onSubmit={handleSubmit} onCancel={() => setActiveDoctor(null)} />
+            <GiveReviews doctor={activeDoctor} onSubmit={handleSubmit} onCancel={() => setActiveDoctor(null)} />
           </div>
         </div>
       )}

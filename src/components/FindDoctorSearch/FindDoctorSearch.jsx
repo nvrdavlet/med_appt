@@ -1,21 +1,28 @@
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { specialities } from '../../data/doctors';
 import './FindDoctorSearch.css';
 
-export default function FindDoctorSearch({ onSearch, title = 'Find a doctor at your own ease' }) {
-  const [query, setQuery] = useState('');
-  const [open, setOpen] = useState(false);
+// Doctor search for the Appointment Booking component.
+// Selecting a speciality navigates to the results route:
+//   /booking-consultation?speciality=<value>   (or /instant-consultation?speciality=<value>)
+export default function FindDoctorSearch({ title = 'Find a doctor at your own ease' }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const current = new URLSearchParams(location.search).get('speciality') || '';
+  const [searchDoctor, setSearchDoctor] = useState(current);
+  const [doctorResultHidden, setDoctorResultHidden] = useState(true);
 
-  const matches = specialities.filter((s) => s.toLowerCase().includes(query.toLowerCase()));
+  const matches = specialities.filter((s) => s.toLowerCase().includes(searchDoctor.toLowerCase()));
 
-  const choose = (speciality) => {
-    setQuery(speciality);
-    setOpen(false);
-    onSearch(speciality);
+  const handleDoctorSelect = (speciality) => {
+    setSearchDoctor(speciality);
+    setDoctorResultHidden(true);
+    navigate(`${location.pathname}?speciality=${encodeURIComponent(speciality)}`);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') choose(query.trim());
+    if (e.key === 'Enter' && searchDoctor.trim()) handleDoctorSelect(searchDoctor.trim());
   };
 
   return (
@@ -35,17 +42,17 @@ export default function FindDoctorSearch({ onSearch, title = 'Find a doctor at y
           type="text"
           className="form-control"
           placeholder="Search doctors, clinics, hospitals, etc."
-          value={query}
-          onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          value={searchDoctor}
+          onChange={(e) => { setSearchDoctor(e.target.value); setDoctorResultHidden(false); }}
+          onFocus={() => setDoctorResultHidden(false)}
+          onBlur={() => setTimeout(() => setDoctorResultHidden(true), 150)}
           onKeyDown={handleKeyDown}
         />
-        {open && matches.length > 0 && (
+        {!doctorResultHidden && matches.length > 0 && (
           <ul className="finddoctor-results">
-            {matches.map((s) => (
-              <li key={s} onMouseDown={() => choose(s)}>
-                <span>{s}</span>
+            {matches.map((speciality) => (
+              <li key={speciality} onMouseDown={() => handleDoctorSelect(speciality)}>
+                <span>{speciality}</span>
                 <small>SPECIALITY</small>
               </li>
             ))}

@@ -1,0 +1,1 @@
+{"authtoken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU3NTdhOWUxLTUyMDItNDM3My04ZWNkLWY3ZmUyODcxODA1OSIsImVtYWlsIjoibnVyZGF1bGV0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzkzOTAzMjEwMDA0fQ.06DtP7qtjaFyys8vE65hQ29uVjGOzEKYLXVpnZPr3B0","user":{"id":"5757a9e1-5202-4373-8ecd-f7fe28718059","role":"patient","name":"Nurdaulet","email":"nurdaulet@example.com","phone":"7766378394"}}
