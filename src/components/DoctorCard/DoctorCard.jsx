@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppointmentForm from '../AppointmentForm/AppointmentForm';
+import AppointmentFormIC from '../AppointmentFormIC/AppointmentFormIC';
 import { addAppointment, cancelAppointment, getAppointments, APPOINTMENTS_EVENT } from '../../utils/appointments';
 import { getCurrentUser } from '../../utils/auth';
 import './DoctorCard.css';
@@ -21,6 +22,13 @@ export default function DoctorCard({ doctor, instant = false }) {
   const openForm = () => {
     if (!getCurrentUser()) return navigate('/login');
     setShowForm(true);
+  };
+
+  // Cancel appointment: removes it from storage; the card shows "Book" again
+  // and the Notification disappears automatically.
+  const handleCancel = (appointmentId) => {
+    cancelAppointment(appointmentId);
+    setAppointments(mine(doctor));
   };
 
   const handleSubmit = (details) => {
@@ -46,7 +54,7 @@ export default function DoctorCard({ doctor, instant = false }) {
             <div key={a.id} className="doctor-booked-item">
               <p><strong>{a.name}</strong> · {a.phone}</p>
               <p>{a.date} · {a.time}</p>
-              <button className="btn btn-danger" onClick={() => cancelAppointment(a.id)}>Cancel Appointment</button>
+              <button className="btn btn-danger" onClick={() => handleCancel(a.id)}>Cancel Appointment</button>
             </div>
           ))}
         </div>
@@ -61,7 +69,11 @@ export default function DoctorCard({ doctor, instant = false }) {
         <div className="modal-backdrop" onClick={() => setShowForm(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>{instant ? 'Instant Consultation' : 'Book an Appointment'}</h2>
-            <AppointmentForm doctor={doctor} instant={instant} onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
+            {instant ? (
+              <AppointmentFormIC doctor={doctor} onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
+            ) : (
+              <AppointmentForm doctor={doctor} onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
+            )}
           </div>
         </div>
       )}

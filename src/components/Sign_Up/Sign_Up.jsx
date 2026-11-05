@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signUp } from '../../utils/auth';
+import { registerUser } from '../../utils/auth';
 
 const empty = { role: '', name: '', phone: '', email: '', password: '' };
 
@@ -27,13 +27,14 @@ export default function SignUp() {
     if (errors[name]) setErrors({ ...errors, [name]: undefined });
   };
 
-  const handleSubmit = (e) => {
+  // Validates the form, then calls the registration API (POST /api/auth/register)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const found = validateSignUp(values);
     setErrors(found);
     if (Object.keys(found).length) return;
 
-    const result = signUp(values);
+    const result = await registerUser(values);
     if (!result.ok) return setFormError(result.error);
     navigate('/');
   };

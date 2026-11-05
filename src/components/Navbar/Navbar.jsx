@@ -56,7 +56,7 @@ export default function Navbar() {
                 {dropdownOpen && (
                   <div className="nav-dropdown">
                     <Link to="/profile" onClick={closeMenus}>Your Profile</Link>
-                    <Link to="/booking-consultation" onClick={closeMenus}>Your Appointments</Link>
+                    <Link to="/reports" onClick={closeMenus}>Your Reports</Link>
                   </div>
                 )}
               </li>

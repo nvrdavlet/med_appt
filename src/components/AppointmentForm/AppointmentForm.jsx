@@ -2,66 +2,55 @@ import { useState } from 'react';
 
 const timeSlots = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'];
 
-// instant = true → Instant Consultation (only name + phone, no date/time)
-export default function AppointmentForm({ doctor, instant = false, onSubmit, onCancel }) {
+// Appointment booking form: Name, Phone Number, Date and Time slot.
+export default function AppointmentForm({ doctor, onSubmit, onCancel }) {
   const today = new Date().toISOString().split('T')[0];
-  const [values, setValues] = useState({
-    name: sessionStorage.getItem('name') || '',
-    phone: sessionStorage.getItem('phone') || '',
-    date: '',
-    time: '',
-  });
+  const [name, setName] = useState(sessionStorage.getItem('name') || '');
+  const [phoneNumber, setPhoneNumber] = useState(sessionStorage.getItem('phone') || '');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => setValues({ ...values, [e.target.name]: e.target.value });
-
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     const found = {};
-    if (!values.name.trim()) found.name = 'Name is required.';
-    if (!/^\d{10}$/.test(values.phone)) found.phone = 'Phone number must be exactly 10 digits.';
-    if (!instant && !values.date) found.date = 'Please choose a date.';
-    if (!instant && !values.time) found.time = 'Please choose a time slot.';
+    if (!name.trim()) found.name = 'Name is required.';
+    if (!/^\d{10}$/.test(phoneNumber)) found.phone = 'Phone number must be exactly 10 digits.';
+    if (!date) found.date = 'Please choose a date.';
+    if (!time) found.time = 'Please choose a time slot.';
     setErrors(found);
     if (Object.keys(found).length) return;
 
-    const details = instant
-      ? { name: values.name, phone: values.phone, date: today, time: 'Now (instant)', instant: true }
-      : values;
-    onSubmit(details);
+    onSubmit({ name, phone: phoneNumber, date, time });
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleFormSubmit} noValidate>
       <div className="form-group">
         <label htmlFor="appt-name">Name</label>
-        <input id="appt-name" name="name" className="form-control" value={values.name} onChange={handleChange} />
+        <input id="appt-name" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
         {errors.name && <div className="error-text">{errors.name}</div>}
       </div>
       <div className="form-group">
         <label htmlFor="appt-phone">Phone Number</label>
-        <input id="appt-phone" name="phone" type="tel" className="form-control" value={values.phone} onChange={handleChange} />
+        <input id="appt-phone" type="tel" className="form-control" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
         {errors.phone && <div className="error-text">{errors.phone}</div>}
       </div>
-      {!instant && (
-        <>
-          <div className="form-group">
-            <label htmlFor="appt-date">Date of Appointment</label>
-            <input id="appt-date" name="date" type="date" min={today} className="form-control" value={values.date} onChange={handleChange} />
-            {errors.date && <div className="error-text">{errors.date}</div>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="appt-time">Book Time Slot</label>
-            <select id="appt-time" name="time" className="form-control" value={values.time} onChange={handleChange}>
-              <option value="">Select a time slot</option>
-              {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-            {errors.time && <div className="error-text">{errors.time}</div>}
-          </div>
-        </>
-      )}
+      <div className="form-group">
+        <label htmlFor="appt-date">Date of Appointment</label>
+        <input id="appt-date" type="date" min={today} className="form-control" value={date} onChange={(e) => setDate(e.target.value)} />
+        {errors.date && <div className="error-text">{errors.date}</div>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="appt-time">Book Time Slot</label>
+        <select id="appt-time" className="form-control" value={time} onChange={(e) => setTime(e.target.value)}>
+          <option value="">Select a time slot</option>
+          {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+        </select>
+        {errors.time && <div className="error-text">{errors.time}</div>}
+      </div>
       <div className="form-actions">
-        <button type="submit" className="btn btn-primary">{instant ? 'Book Now' : 'Book Appointment'}</button>
+        <button type="submit" className="btn btn-primary">Book Appointment</button>
         <button type="button" className="btn btn-ghost" onClick={onCancel}>Close</button>
       </div>
       <p className="form-footer">with {doctor.name}</p>

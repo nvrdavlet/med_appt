@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../../utils/auth';
+import { loginUser } from '../../utils/auth';
 
 const empty = { email: '', password: '' };
 
@@ -26,13 +26,14 @@ export default function Login() {
     setFormError('');
   };
 
-  const handleSubmit = (e) => {
+  // Validates the form, then calls the login API (POST /api/auth/login)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const found = validateLogin(values);
     setErrors(found);
     if (Object.keys(found).length) return;
 
-    const result = login(values);
+    const result = await loginUser(values);
     if (!result.ok) return setFormError(result.error);
     navigate('/');
   };

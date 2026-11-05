@@ -27,14 +27,37 @@ npm run build      # production build in /dist
 npm run preview    # serve the production build
 ```
 
+## Backend API
+
+The `server/` folder contains a dependency-free Node.js authentication API (users stored in `server/users.json`, scrypt-hashed passwords, JWT-style token).
+
+```bash
+node server/index.js            # http://localhost:8181
+```
+
+| Method | Endpoint | Body |
+|--------|----------|------|
+| POST | `/api/auth/register` | `{ role, name, email, phone, password }` |
+| POST | `/api/auth/login` | `{ email, password }` |
+| GET / PUT | `/api/auth/user` | `Authorization: Bearer <authtoken>` |
+
+```bash
+curl -X POST http://localhost:8181/api/auth/register -H "Content-Type: application/json" -d '{"role":"patient","name":"Nurdaulet","email":"nurdaulet@example.com","phone":"7766378394","password":"password123"}'
+curl -X POST http://localhost:8181/api/auth/login -H "Content-Type: application/json" -d '{"email":"nurdaulet@example.com","password":"password123"}'
+```
+
+`Sign_Up.jsx` and `Login.jsx` call these endpoints. On the static deployed site (no backend) they fall back to browser storage so the demo keeps working.
+
 ## Project structure
 
 ```
+server/            Node.js authentication API
 design/            Module 1 layout mockups (navbar, sign up, login)
 public/            static assets
 screenshots/       screenshots for the capstone submission
 src/
   components/      Navbar, Landing_Page, Sign_Up, Login, FindDoctorSearch,
+                   AppointmentFormIC, ReportsLayout,
                    DoctorCard, AppointmentForm, BookingConsultation,
                    InstantConsultation, Notification, ReviewForm,
                    GiveReviews, ProfileCard

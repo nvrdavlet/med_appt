@@ -1,13 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import LandingPage from './components/Landing_Page/LandingPage';
-import SignUp from './components/Sign_Up/SignUp';
+import SignUp from './components/Sign_Up/Sign_Up';
 import Login from './components/Login/Login';
 import BookingConsultation from './components/BookingConsultation/BookingConsultation';
 import InstantConsultation from './components/InstantConsultation/InstantConsultation';
 import ReviewForm from './components/ReviewForm/ReviewForm';
 import ProfileCard from './components/ProfileCard/ProfileCard';
 import Notification from './components/Notification/Notification';
+import ReportsLayout from './components/ReportsLayout/ReportsLayout';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/instant-consultation" element={<InstantConsultation />} />
             <Route path="/reviews" element={<ReviewForm />} />
             <Route path="/profile" element={<ProfileCard />} />
+            <Route path="/reports" element={<ReportsLayout />} />
             <Route path="*" element={<LandingPage />} />
           </Routes>
         </main>

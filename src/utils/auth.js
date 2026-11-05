@@ -16,8 +16,8 @@ const notify = () => window.dispatchEvent(new Event(AUTH_EVENT));
 const getUsers = () => readJSON(localStorage, USERS_KEY, []);
 const saveUsers = (users) => writeJSON(localStorage, USERS_KEY, users);
 
-function startSession(user) {
-  sessionStorage.setItem('auth-token', `token-${Date.now()}`);
+function startSession(user, token = `local-${Date.now()}`) {
+  sessionStorage.setItem('auth-token', token);
   sessionStorage.setItem('name', user.name);
   sessionStorage.setItem('email', user.email);
   sessionStorage.setItem('phone', user.phone);
@@ -33,6 +33,37 @@ export function getCurrentUser() {
     phone: sessionStorage.getItem('phone') || '',
     role: sessionStorage.getItem('role') || 'patient',
   };
+}
+
+// Calls the backend API. Returns null when the server is unreachable
+// (e.g. on the static deployed site) so we can fall back to local storage.
+async function callApi(endpoint, body) {
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      const error = Array.isArray(json.error) ? json.error.join(', ') : json.error;
+      return { ok: false, error: error || 'Request failed.' };
+    }
+    startSession(json.user, json.authtoken);
+    return { ok: true };
+  } catch {
+    return null; // network error → server not running
+  }
+}
+
+// Register a new user through POST /api/auth/register
+export async function registerUser(data) {
+  return (await callApi('/api/auth/register', data)) ?? signUp(data);
+}
+
+// Authenticate through POST /api/auth/login
+export async function loginUser(data) {
+  return (await callApi('/api/auth/login', data)) ?? login(data);
 }
 
 export function signUp({ role, name, phone, email, password }) {
